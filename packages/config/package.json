@@ -1,0 +1,59 @@
+{
+  "name": "@prostapaper/config",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Shared tsconfig, ESLint and Prettier configuration for the workspace",
+  "type": "module",
+  "imports": {
+    "#*": "./eslint/*.ts"
+  },
+  "exports": {
+    "./esbuild/lambda": "./esbuild/lambda.ts",
+    "./eslint/base": "./eslint/base.ts",
+    "./eslint/node": "./eslint/node.ts",
+    "./eslint/web": "./eslint/web.ts",
+    "./prettier": "./prettier.ts",
+    "./tsconfig/base": "./tsconfig/base.json",
+    "./tsconfig/node": "./tsconfig/node.json",
+    "./tsconfig/web": "./tsconfig/web.json"
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "test": "node --test eslint/rules/*.test.ts",
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@eslint-community/eslint-plugin-eslint-comments": "~4.8.1",
+    "@eslint/js": "~9.39.5",
+    "@eslint/json": "~2.1.0",
+    "@tanstack/eslint-plugin-query": "~5.104.1",
+    "@tanstack/eslint-plugin-router": "~1.162.0",
+    "@typescript-eslint/utils": "~8.71.0",
+    "esbuild": "~0.28.2",
+    "eslint": "catalog:",
+    "eslint-config-prettier": "~10.1.8",
+    "eslint-plugin-hono": "~1.0.6",
+    "eslint-plugin-import-x": "~4.17.1",
+    "eslint-plugin-jsx-a11y": "~6.10.2",
+    "eslint-plugin-n": "~18.4.1",
+    "eslint-plugin-package-json": "~1.10.1",
+    "eslint-plugin-react": "~7.37.5",
+    "eslint-plugin-react-hooks": "~7.1.1",
+    "eslint-plugin-react-refresh": "~0.5.7",
+    "eslint-plugin-regexp": "~3.3.1",
+    "eslint-plugin-simple-import-sort": "~14.0.0",
+    "eslint-plugin-unicorn": "~65.0.1",
+    "globals": "~17.13.0",
+    "prettier": "catalog:",
+    "prettier-plugin-tailwindcss": "~0.8.1",
+    "typescript-eslint": "~8.71.0"
+  },
+  "peerDependencies": {
+    "typescript": "catalog:"
+  },
+  "devDependencies": {
+    "@types/eslint-plugin-jsx-a11y": "~6.10.1",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

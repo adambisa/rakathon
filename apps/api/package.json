@@ -1,0 +1,54 @@
+{
+  "name": "@prostapaper/api",
+  "version": "0.0.0",
+  "private": true,
+  "description": "tRPC + Hono API and production frontend, runs on ECS Fargate",
+  "type": "module",
+  "imports": {
+    "#*": "./src/*.ts",
+    "#integration/*": "./tests/integration/*.ts",
+    "#fixtures/*": "./tests/fixtures/*.ts"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/trpc/router.ts"
+    }
+  },
+  "scripts": {
+    "build": "node build.ts",
+    "check:deploy-env": "node --import tsx scripts/check-deploy-env.ts",
+    "dev": "node --env-file=${API_ENV_FILE:-.env} --import tsx --watch src/index.ts",
+    "lint": "eslint . --max-warnings 0",
+    "seed:users": "node --env-file=${API_ENV_FILE:-.env} --import tsx scripts/seed-users.ts",
+    "start": "node --enable-source-maps dist/server.mjs",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "test:integration": "node --env-file=${API_ENV_FILE:-.env} --import tsx --test --test-concurrency=1 tests/integration/*.test.ts",
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@aws-sdk/client-lambda": "^3.1149.0",
+    "@aws-sdk/client-s3": "^3.1146.0",
+    "@aws-sdk/s3-presigned-post": "^3.1146.0",
+    "@aws-sdk/s3-request-presigner": "^3.1147.0",
+    "@hono/node-server": "~2.1.3",
+    "@hono/trpc-server": "~0.4.2",
+    "@prostapaper/contracts": "workspace:*",
+    "@prostapaper/db": "workspace:*",
+    "@trpc/server": "~11.19.0",
+    "better-auth": "1.7.7",
+    "drizzle-orm": "0.45.3",
+    "hono": "~4.13.12",
+    "rate-limiter-flexible": "^11.2.1",
+    "validator": "13.15.35",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-ssm": "^3.1146.0",
+    "@prostapaper/config": "workspace:*",
+    "@trpc/client": "~11.19.0",
+    "@types/node": "catalog:",
+    "@types/validator": "^13.15.10",
+    "esbuild": "~0.28.2",
+    "tsx": "~4.23.15"
+  }
+}

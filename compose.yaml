@@ -1,0 +1,6 @@
+name: prostapaper
+include:
+  - path: infra/docker/compose.yaml
+    project_directory: .
+    env_file:
+      - ${API_ENV_FILE:-apps/api/.env}

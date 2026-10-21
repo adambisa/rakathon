@@ -1,0 +1,46 @@
+# deps / build
+node_modules/
+dist/
+.turbo/
+.tanstack/
+*.tsbuildinfo
+generated/
+
+# env & secrets
+.local/
+__pycache__/
+.env
+.env.*
+!.env.example
+
+# terraform
+infra/.local/
+infra/**/.terraform/
+infra/**/*.tfstate
+infra/**/*.tfstate.*
+infra/**/*.tfplan
+infra/**/*.tfvars
+!infra/**/*.auto.tfvars.example
+
+# eval artefacts & llm cache
+packages/eval/runs/
+cache/
+qa/dataset.json
+qa/input/*
+!qa/input/.gitkeep
+qa/reference/*
+!qa/reference/.gitkeep
+qa/runs/
+
+# os / editor
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# eslint
+.eslintcache
+
+# Local evaluation runs; durable copies live under qa/ in the documents bucket
+outputs/

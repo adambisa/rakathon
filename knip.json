@@ -1,0 +1,45 @@
+{
+  "$schema": "./node_modules/knip/schema.json",
+  "rules": {
+    "dependencies": "error",
+    "devDependencies": "error",
+    "optionalPeerDependencies": "error",
+    "unlisted": "error",
+    "unresolved": "error",
+    "binaries": "error",
+    "catalog": "error",
+    "catalogReferences": "error",
+    "files": "warn",
+    "exports": "warn",
+    "types": "warn",
+    "nsExports": "warn",
+    "nsTypes": "warn",
+    "namespaceMembers": "warn",
+    "duplicates": "warn",
+    "enumMembers": "warn",
+    "cycles": "warn"
+  },
+  "workspaces": {
+    "apps/web": {
+      "entry": ["tests/browser/review-lifecycle.tsx", "tests/browser/vite.config.ts"],
+      "ignoreDependencies": ["@svgr/plugin-jsx"]
+    },
+    "packages/db": {
+      "entry": ["scripts/*.ts", "tests/*.test.ts"]
+    },
+    "apps/api": {
+      "entry": ["scripts/*.ts", "tests/*.test.ts", "tests/integration/*.test.ts"]
+    },
+    "apps/document-ingest": {
+      "entry": ["src/handler.ts", "scripts/*.ts", "tests/*.test.ts"]
+    },
+    "packages/extraction": {
+      "entry": ["scripts/*.ts", "tests/*.test.ts"],
+      "ignoreDependencies": ["@tesseract.js-data/ces", "tesseract.js-core"]
+    },
+    "apps/case-mapping": {
+      "entry": ["src/handler.ts", "tests/*.test.ts"]
+    }
+  },
+  "ignoreBinaries": ["terraform"]
+}

@@ -1,0 +1,29 @@
+{
+  "name": "@prostapaper/case-mapping",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Maps extracted case documents to a REDCap-shaped surgery record",
+  "type": "module",
+  "imports": {
+    "#*": "./src/*.ts"
+  },
+  "scripts": {
+    "build": "node build.ts",
+    "lint": "eslint . --max-warnings 0",
+    "test": "node --test tests/*.test.ts",
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1148.0",
+    "@aws-sdk/client-ssm": "^3.1146.0",
+    "@prostapaper/contracts": "workspace:*",
+    "@prostapaper/db": "workspace:*",
+    "@prostapaper/mapping": "workspace:*",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@prostapaper/config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

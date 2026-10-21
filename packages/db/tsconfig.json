@@ -1,0 +1,4 @@
+{
+  "extends": "@prostapaper/config/tsconfig/node",
+  "include": ["src", "*.ts", "scripts", "tests"]
+}

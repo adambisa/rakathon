@@ -1,0 +1,6 @@
+pnpm-lock.yaml
+**/dist/
+**/generated/
+**/*.gen.ts
+infra/
+docs/reference/

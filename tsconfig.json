@@ -1,0 +1,7 @@
+{
+  "extends": "@prostapaper/config/tsconfig/node",
+  "include": ["eslint.config.ts", "lint-staged.config.ts", "infra/check-terraform-format.mjs"],
+  "compilerOptions": {
+    "allowJs": true
+  }
+}

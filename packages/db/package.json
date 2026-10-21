@@ -1,0 +1,44 @@
+{
+  "name": "@prostapaper/db",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Server-only Drizzle schema, PostgreSQL client and versioned migrations",
+  "type": "module",
+  "imports": {
+    "#*": "./src/*.ts"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./auth-schema": "./src/auth-schema.ts",
+    "./cases": "./src/cases.ts",
+    "./config": "./src/config.ts",
+    "./documents": "./src/documents.ts",
+    "./locking": "./src/locking.ts",
+    "./schema": "./src/schema.ts"
+  },
+  "scripts": {
+    "build": "node build.ts",
+    "db:down": "cd ../.. && docker compose stop db",
+    "db:generate": "drizzle-kit generate",
+    "db:seed": "cd ../.. && docker compose run --build --rm seed",
+    "db:up": "cd ../.. && docker compose up -d --wait db",
+    "lint": "eslint . --max-warnings 0",
+    "test": "node --test tests/*.test.ts",
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@prostapaper/contracts": "workspace:*",
+    "drizzle-orm": "0.45.3",
+    "kysely": "0.29.6",
+    "pg": "8.23.1",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@prostapaper/config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/pg": "8.23.1",
+    "drizzle-kit": "0.31.11",
+    "esbuild": "~0.28.2",
+    "typescript": "catalog:"
+  }
+}

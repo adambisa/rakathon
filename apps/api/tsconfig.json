@@ -1,0 +1,4 @@
+{
+  "extends": "@prostapaper/config/tsconfig/node",
+  "include": ["src", "eslint.config.ts", "build.ts", "scripts", "tests"]
+}

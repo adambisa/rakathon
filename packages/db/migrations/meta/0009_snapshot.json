@@ -1,0 +1,877 @@
+{
+  "id": "bfedd9b7-3191-4be3-8eed-7a6b172c5900",
+  "prevId": "f78e8ccc-a979-4be8-9ffa-7b4a5c46b09a",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "app.cases": {
+      "name": "cases",
+      "schema": "app",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "submitted_at": {
+          "name": "submitted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mapping_started_at": {
+          "name": "mapping_started_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mapped_at": {
+          "name": "mapped_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mapping_result_key": {
+          "name": "mapping_result_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "review_started_at": {
+          "name": "review_started_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "approved_at": {
+          "name": "approved_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "approved_by": {
+          "name": "approved_by",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "export_started_at": {
+          "name": "export_started_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "exported_at": {
+          "name": "exported_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "generated": {
+            "as": "case\n    when exported_at is not null then 'exported'\n    when export_started_at is not null then 'exporting'\n    when approved_at is not null then 'approved'\n    when review_started_at is not null then 'in_review'\n    when mapped_at is not null then 'ready_for_review'\n    when mapping_started_at is not null then 'mapping'\n    when submitted_at is not null then 'queued'\n    else 'draft' end",
+            "type": "stored"
+          }
+        }
+      },
+      "indexes": {
+        "cases_owner_created": {
+          "name": "cases_owner_created",
+          "columns": [
+            {
+              "expression": "owner_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "cases_owner_id_user_id_fk": {
+          "name": "cases_owner_id_user_id_fk",
+          "tableFrom": "cases",
+          "tableTo": "user",
+          "schemaTo": "auth",
+          "columnsFrom": ["owner_id"],
+          "columnsTo": ["id"],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "cases_approved_by_user_id_fk": {
+          "name": "cases_approved_by_user_id_fk",
+          "tableFrom": "cases",
+          "tableTo": "user",
+          "schemaTo": "auth",
+          "columnsFrom": ["approved_by"],
+          "columnsTo": ["id"],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "cases_name": {
+          "name": "cases_name",
+          "value": "length(\"app\".\"cases\".\"name\") between 1 and 255 and \"app\".\"cases\".\"name\" ~ '[^[:space:]]'"
+        },
+        "cases_updated_order": {
+          "name": "cases_updated_order",
+          "value": "\"app\".\"cases\".\"updated_at\" is null or (\"app\".\"cases\".\"created_at\" is not null and \"app\".\"cases\".\"updated_at\" >= \"app\".\"cases\".\"created_at\")"
+        },
+        "cases_submitted_order": {
+          "name": "cases_submitted_order",
+          "value": "\"app\".\"cases\".\"submitted_at\" is null or (\"app\".\"cases\".\"created_at\" is not null and \"app\".\"cases\".\"submitted_at\" >= \"app\".\"cases\".\"created_at\")"
+        },
+        "cases_mapping_order": {
+          "name": "cases_mapping_order",
+          "value": "\"app\".\"cases\".\"mapping_started_at\" is null or (\"app\".\"cases\".\"submitted_at\" is not null and \"app\".\"cases\".\"mapping_started_at\" >= \"app\".\"cases\".\"submitted_at\")"
+        },
+        "cases_mapped_order": {
+          "name": "cases_mapped_order",
+          "value": "\"app\".\"cases\".\"mapped_at\" is null or (\"app\".\"cases\".\"mapping_started_at\" is not null and \"app\".\"cases\".\"mapped_at\" >= \"app\".\"cases\".\"mapping_started_at\")"
+        },
+        "cases_review_order": {
+          "name": "cases_review_order",
+          "value": "\"app\".\"cases\".\"review_started_at\" is null or (\"app\".\"cases\".\"mapped_at\" is not null and \"app\".\"cases\".\"review_started_at\" >= \"app\".\"cases\".\"mapped_at\")"
+        },
+        "cases_approval_order": {
+          "name": "cases_approval_order",
+          "value": "\"app\".\"cases\".\"approved_at\" is null or (\"app\".\"cases\".\"review_started_at\" is not null and \"app\".\"cases\".\"approved_at\" >= \"app\".\"cases\".\"review_started_at\")"
+        },
+        "cases_export_start_order": {
+          "name": "cases_export_start_order",
+          "value": "\"app\".\"cases\".\"export_started_at\" is null or (\"app\".\"cases\".\"approved_at\" is not null and \"app\".\"cases\".\"export_started_at\" >= \"app\".\"cases\".\"approved_at\")"
+        },
+        "cases_exported_order": {
+          "name": "cases_exported_order",
+          "value": "\"app\".\"cases\".\"exported_at\" is null or (\"app\".\"cases\".\"export_started_at\" is not null and \"app\".\"cases\".\"exported_at\" >= \"app\".\"cases\".\"export_started_at\")"
+        },
+        "cases_mapping_result_nonblank": {
+          "name": "cases_mapping_result_nonblank",
+          "value": "\"app\".\"cases\".\"mapping_result_key\" is null or \"app\".\"cases\".\"mapping_result_key\" ~ '[^[:space:]]'"
+        },
+        "cases_mapped_result": {
+          "name": "cases_mapped_result",
+          "value": "\"app\".\"cases\".\"mapped_at\" is null or \"app\".\"cases\".\"mapping_result_key\" is not null"
+        },
+        "cases_approval_pair": {
+          "name": "cases_approval_pair",
+          "value": "(\"app\".\"cases\".\"approved_at\" is null) = (\"app\".\"cases\".\"approved_by\" is null)"
+        },
+        "cases_approval_owner": {
+          "name": "cases_approval_owner",
+          "value": "\"app\".\"cases\".\"approved_by\" is null or \"app\".\"cases\".\"approved_by\" = \"app\".\"cases\".\"owner_id\""
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "app.documents": {
+      "name": "documents",
+      "schema": "app",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "case_id": {
+          "name": "case_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "uploaded_by": {
+          "name": "uploaded_by",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "filename": {
+          "name": "filename",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "size_bytes": {
+          "name": "size_bytes",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "content_type": {
+          "name": "content_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "storage_bucket": {
+          "name": "storage_bucket",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "storage_key": {
+          "name": "storage_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_version_id": {
+          "name": "source_version_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "kind": {
+          "name": "kind",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "uploaded_at": {
+          "name": "uploaded_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "extraction_started_at": {
+          "name": "extraction_started_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "extracted_at": {
+          "name": "extracted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "extraction_result_key": {
+          "name": "extraction_result_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "generated": {
+            "as": "case\n    when extracted_at is not null then 'extracted'\n    when extraction_started_at is not null then 'extracting'\n    when uploaded_at is not null then 'uploaded'\n    else 'awaiting_upload' end",
+            "type": "stored"
+          }
+        }
+      },
+      "indexes": {
+        "documents_case": {
+          "name": "documents_case",
+          "columns": [
+            {
+              "expression": "case_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "documents_uploader": {
+          "name": "documents_uploader",
+          "columns": [
+            {
+              "expression": "uploaded_by",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "documents_case_id_cases_id_fk": {
+          "name": "documents_case_id_cases_id_fk",
+          "tableFrom": "documents",
+          "tableTo": "cases",
+          "schemaTo": "app",
+          "columnsFrom": ["case_id"],
+          "columnsTo": ["id"],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "documents_uploaded_by_user_id_fk": {
+          "name": "documents_uploaded_by_user_id_fk",
+          "tableFrom": "documents",
+          "tableTo": "user",
+          "schemaTo": "auth",
+          "columnsFrom": ["uploaded_by"],
+          "columnsTo": ["id"],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "documents_storage_identity": {
+          "name": "documents_storage_identity",
+          "nullsNotDistinct": false,
+          "columns": ["storage_bucket", "storage_key"]
+        },
+        "documents_case_kind": {
+          "name": "documents_case_kind",
+          "nullsNotDistinct": false,
+          "columns": ["case_id", "kind"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "documents_filename": {
+          "name": "documents_filename",
+          "value": "length(\"app\".\"documents\".\"filename\") between 1 and 255 and \"app\".\"documents\".\"filename\" ~ '[^[:space:]]'"
+        },
+        "documents_size": {
+          "name": "documents_size",
+          "value": "\"app\".\"documents\".\"size_bytes\" is null or \"app\".\"documents\".\"size_bytes\" > 0"
+        },
+        "documents_content_type": {
+          "name": "documents_content_type",
+          "value": "\"app\".\"documents\".\"content_type\" in ('application/pdf', 'image/jpeg', 'image/png', 'image/tiff')"
+        },
+        "documents_storage_bucket": {
+          "name": "documents_storage_bucket",
+          "value": "\"app\".\"documents\".\"storage_bucket\" ~ '[^[:space:]]'"
+        },
+        "documents_storage_key": {
+          "name": "documents_storage_key",
+          "value": "\"app\".\"documents\".\"storage_key\" ~ '[^[:space:]]'"
+        },
+        "documents_kind": {
+          "name": "documents_kind",
+          "value": "\"app\".\"documents\".\"kind\" is null or \"app\".\"documents\".\"kind\" in ('report', 'schema')"
+        },
+        "documents_kind_extracted": {
+          "name": "documents_kind_extracted",
+          "value": "\"app\".\"documents\".\"kind\" is null or \"app\".\"documents\".\"extracted_at\" is not null"
+        },
+        "documents_source_version": {
+          "name": "documents_source_version",
+          "value": "\"app\".\"documents\".\"source_version_id\" is null or \"app\".\"documents\".\"source_version_id\" ~ '[^[:space:]]'"
+        },
+        "documents_uploaded_version": {
+          "name": "documents_uploaded_version",
+          "value": "\"app\".\"documents\".\"uploaded_at\" is null or \"app\".\"documents\".\"source_version_id\" is not null"
+        },
+        "documents_extraction_result_nonblank": {
+          "name": "documents_extraction_result_nonblank",
+          "value": "\"app\".\"documents\".\"extraction_result_key\" is null or \"app\".\"documents\".\"extraction_result_key\" ~ '[^[:space:]]'"
+        },
+        "documents_extracted_result": {
+          "name": "documents_extracted_result",
+          "value": "\"app\".\"documents\".\"extracted_at\" is null or \"app\".\"documents\".\"extraction_result_key\" is not null"
+        },
+        "documents_updated_order": {
+          "name": "documents_updated_order",
+          "value": "\"app\".\"documents\".\"updated_at\" is null or (\"app\".\"documents\".\"created_at\" is not null and \"app\".\"documents\".\"updated_at\" >= \"app\".\"documents\".\"created_at\")"
+        },
+        "documents_uploaded_order": {
+          "name": "documents_uploaded_order",
+          "value": "\"app\".\"documents\".\"uploaded_at\" is null or (\"app\".\"documents\".\"created_at\" is not null and \"app\".\"documents\".\"uploaded_at\" >= \"app\".\"documents\".\"created_at\")"
+        },
+        "documents_extraction_order": {
+          "name": "documents_extraction_order",
+          "value": "\"app\".\"documents\".\"extraction_started_at\" is null or (\"app\".\"documents\".\"uploaded_at\" is not null and \"app\".\"documents\".\"extraction_started_at\" >= \"app\".\"documents\".\"uploaded_at\")"
+        },
+        "documents_extracted_order": {
+          "name": "documents_extracted_order",
+          "value": "\"app\".\"documents\".\"extracted_at\" is null or (\"app\".\"documents\".\"extraction_started_at\" is not null and \"app\".\"documents\".\"extracted_at\" >= \"app\".\"documents\".\"extraction_started_at\")"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "auth.account": {
+      "name": "account",
+      "schema": "auth",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "account_id": {
+          "name": "account_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider_id": {
+          "name": "provider_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "access_token": {
+          "name": "access_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "refresh_token": {
+          "name": "refresh_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id_token": {
+          "name": "id_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "access_token_expires_at": {
+          "name": "access_token_expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "refresh_token_expires_at": {
+          "name": "refresh_token_expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "scope": {
+          "name": "scope",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "account_user": {
+          "name": "account_user",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "account_user_id_user_id_fk": {
+          "name": "account_user_id_user_id_fk",
+          "tableFrom": "account",
+          "tableTo": "user",
+          "schemaTo": "auth",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "auth.session": {
+      "name": "session",
+      "schema": "auth",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "token": {
+          "name": "token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ip_address": {
+          "name": "ip_address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "user_agent": {
+          "name": "user_agent",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "impersonated_by": {
+          "name": "impersonated_by",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "session_user": {
+          "name": "session_user",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "session_user_id_user_id_fk": {
+          "name": "session_user_id_user_id_fk",
+          "tableFrom": "session",
+          "tableTo": "user",
+          "schemaTo": "auth",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "session_token_unique": {
+          "name": "session_token_unique",
+          "nullsNotDistinct": false,
+          "columns": ["token"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "auth.user": {
+      "name": "user",
+      "schema": "auth",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "display_email": {
+          "name": "display_email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email_verified": {
+          "name": "email_verified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "role": {
+          "name": "role",
+          "type": "role",
+          "typeSchema": "auth",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'reviewer'"
+        },
+        "banned": {
+          "name": "banned",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "ban_reason": {
+          "name": "ban_reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ban_expires": {
+          "name": "ban_expires",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_anonymous": {
+          "name": "is_anonymous",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_email_unique": {
+          "name": "user_email_unique",
+          "nullsNotDistinct": false,
+          "columns": ["email"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "auth.verification": {
+      "name": "verification",
+      "schema": "auth",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "identifier": {
+          "name": "identifier",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "verification_identifier": {
+          "name": "verification_identifier",
+          "columns": [
+            {
+              "expression": "identifier",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "auth.role": {
+      "name": "role",
+      "schema": "auth",
+      "values": ["reviewer", "admin"]
+    }
+  },
+  "schemas": {
+    "app": "app",
+    "auth": "auth"
+  },
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

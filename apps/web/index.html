@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="cs" data-theme="mou">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/favicon-96.png" type="image/png" sizes="96x96" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#f04600" />
+    <title>ProstaPaper</title>
+    <script>
+      // Before first paint, so a dark choice never flashes light. Kept in sync with #lib/theme.
+      try {
+        const saved = localStorage.getItem("theme");
+        if (saved === "dark" || (saved === null && matchMedia("(prefers-color-scheme: dark)").matches)) {
+          document.documentElement.dataset.theme = "mou-dark";
+        }
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

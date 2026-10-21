@@ -1,0 +1,7 @@
+{
+  "extends": "@prostapaper/config/tsconfig/web",
+  "compilerOptions": {
+    "types": ["vite/client", "node", "unplugin-icons/types/react"]
+  },
+  "include": ["src", "tests", "vite.config.ts", "eslint.config.ts"]
+}

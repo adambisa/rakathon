@@ -1,0 +1,26 @@
+{
+  "detection": {
+    "orbFeatures": 3000,
+    "ratio": 0.75,
+    "ransacThresholdPx": 5,
+    "minInliers": 40,
+    "minInlierShare": 0.25,
+    "minScale": 0.25,
+    "maxScale": 4
+  },
+  "ink": {
+    "chroma": 30,
+    "darkerThanTemplate": 60,
+    "paperTemplate": 250,
+    "smoothingPx": 7,
+    "whiteTemplate": 200,
+    "lineMarginPx": 4,
+    "closeKernelPx": 15,
+    "minFocusAreaPx": 150,
+    "chromaOnLines": 50
+  },
+  "marking": {
+    "markedShare": 0.2,
+    "coveredShare": 0.3
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "@prostapaper/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Shared Zod schemas for cases, documents, extracted document content and the clinical record",
+  "type": "module",
+  "imports": {
+    "#*": "./src/*.ts",
+    "#scripts/*": "./scripts/*.ts"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "codegen": "node src/codegen.ts",
+    "lint": "eslint . --max-warnings 0",
+    "redcap:dictionary": "node scripts/redcap-dictionary.ts",
+    "test": "node --test tests/*.test.ts",
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@prostapaper/config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

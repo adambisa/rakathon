@@ -1,0 +1,46 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "eslint.options": {
+    "flags": ["v10_config_lookup_from_file"]
+  },
+  "eslint.validate": ["javascript", "typescript", "typescriptreact", "json", "jsonc"],
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+  "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+  "js/ts.preferences.importModuleSpecifier": "non-relative",
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "[markdown]": {
+    "editor.formatOnSave": true
+  },
+  "cSpell.words": [
+    "prostapaper",
+    "Rakathon",
+    "MO\u00da",
+    "REDCap",
+    "PIRADS",
+    "prostatectomy",
+    "Gleason",
+    "daisyui",
+    "tanstack",
+    "trpc",
+    "hono",
+    "turborepo",
+    "esbuild",
+    "drizzle",
+    "typecheck",
+    "unicorn"
+  ],
+  "[terraform]": {
+    "editor.defaultFormatter": null,
+    "editor.formatOnSave": true
+  }
+}

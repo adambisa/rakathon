@@ -1,0 +1,173 @@
+{
+  "$schema": "./node_modules/turbo/schema.json",
+  "ui": "tui",
+  "globalEnv": ["NODE_ENV"],
+  "globalPassThroughEnv": [
+    "ANTHROPIC_API_KEY",
+    "GEMINI_API_KEY",
+    "OPENAI_API_KEY",
+    "AWS_PROFILE",
+    "AWS_REGION"
+  ],
+  "tasks": {
+    "codegen": {
+      "outputs": ["generated/**", "src/routeTree.gen.ts"]
+    },
+    "build": {
+      "dependsOn": ["^build", "codegen"],
+      "outputs": ["dist/**"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build", "codegen"]
+    },
+    "lint": {
+      "dependsOn": ["^build", "codegen"]
+    },
+    "dev": {
+      "dependsOn": ["codegen"],
+      "cache": false,
+      "persistent": true,
+      "passThroughEnv": [
+        "PGHOST",
+        "PGPORT",
+        "PGDATABASE",
+        "PGUSER",
+        "PGPASSWORD",
+        "PGSSLMODE",
+        "NODE_EXTRA_CA_CERTS",
+        "API_ENV_FILE",
+        "BETTER_AUTH_SECRET",
+        "BETTER_AUTH_URL",
+        "SEED_USER_PASSWORD",
+        "S3_DOCUMENT_BUCKET",
+        "AWS_CONFIG_FILE",
+        "AWS_SHARED_CREDENTIALS_FILE"
+      ]
+    },
+    "//#check:shell": {
+      "cache": false
+    },
+    "//#format:check": {
+      "cache": false
+    },
+    "//#knip": {
+      "dependsOn": ["@prostapaper/contracts#codegen", "@prostapaper/web#codegen"],
+      "cache": false,
+      "passThroughEnv": ["KNIP_REPORTER"]
+    },
+    "//#preview:run": {
+      "dependsOn": ["@prostapaper/api#build", "@prostapaper/web#build"],
+      "cache": false,
+      "passThroughEnv": ["API_ENV_FILE", "APP_IMAGE", "WEB_PORT"]
+    },
+    "//#containers:smoke": {
+      "dependsOn": ["@prostapaper/api#build", "@prostapaper/web#build"],
+      "cache": false,
+      "passThroughEnv": ["APP_IMAGE", "DB_LOCAL_PORT", "API_ENV_FILE"]
+    },
+    "//#lint:root": {
+      "cache": false
+    },
+    "//#typecheck:root": {
+      "cache": false
+    },
+    "test": {},
+    "//#containers:integration": {
+      "dependsOn": ["@prostapaper/api#build", "@prostapaper/web#build"],
+      "cache": false,
+      "passThroughEnv": ["APP_IMAGE", "DB_LOCAL_PORT", "API_ENV_FILE"]
+    },
+    "db:generate": {
+      "dependsOn": ["^build"],
+      "cache": false
+    },
+    "test:integration": {
+      "cache": false,
+      "passThroughEnv": [
+        "INTEGRATION_URL",
+        "COMPOSE_PROJECT_NAME",
+        "BETTER_AUTH_SECRET",
+        "BETTER_AUTH_URL",
+        "SEED_USER_PASSWORD",
+        "PGHOST",
+        "PGPORT",
+        "PGDATABASE",
+        "PGUSER",
+        "PGPASSWORD",
+        "PGSSLMODE",
+        "API_ENV_FILE",
+        "APP_IMAGE",
+        "DB_ADMIN_USER",
+        "DB_LOCAL_PORT",
+        "WEB_PORT"
+      ]
+    },
+    "db:up": {
+      "cache": false,
+      "passThroughEnv": ["APP_IMAGE", "DB_LOCAL_PORT", "API_ENV_FILE"]
+    },
+    "db:down": {
+      "cache": false,
+      "passThroughEnv": ["APP_IMAGE", "DB_LOCAL_PORT", "API_ENV_FILE"]
+    },
+    "db:seed": {
+      "cache": false,
+      "passThroughEnv": ["APP_IMAGE", "DB_LOCAL_PORT", "API_ENV_FILE"],
+      "dependsOn": ["build"]
+    },
+    "//#check:terraform:style": {
+      "cache": false
+    }
+  },
+  "boundaries": {
+    "tags": {
+      "tooling": {
+        "dependencies": {
+          "allow": []
+        }
+      },
+      "contracts": {
+        "dependencies": {
+          "allow": ["@prostapaper/config"]
+        }
+      },
+      "api": {
+        "dependencies": {
+          "allow": ["@prostapaper/contracts", "@prostapaper/config", "@prostapaper/db"]
+        }
+      },
+      "web": {
+        "dependencies": {
+          "allow": ["@prostapaper/api", "@prostapaper/contracts", "@prostapaper/config", "@prostapaper/db"]
+        }
+      },
+      "db": {
+        "dependencies": {
+          "allow": ["@prostapaper/contracts", "@prostapaper/config"]
+        }
+      },
+      "lambda": {
+        "dependencies": {
+          "allow": [
+            "@prostapaper/contracts",
+            "@prostapaper/config",
+            "@prostapaper/db",
+            "@prostapaper/extraction",
+            "@prostapaper/mapping"
+          ]
+        }
+      },
+      "extraction": {
+        "dependencies": {
+          "allow": ["@prostapaper/contracts", "@prostapaper/config"]
+        }
+      },
+      "mapping": {
+        "dependencies": {
+          "allow": ["@prostapaper/contracts", "@prostapaper/config"]
+        }
+      }
+    }
+  },
+  "globalDependencies": [".nvmrc"]
+}

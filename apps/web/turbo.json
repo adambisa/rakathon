@@ -1,0 +1,30 @@
+{
+  "extends": ["//"],
+  "tags": ["web"],
+  "boundaries": {
+    "implicitDependencies": ["~icons", "virtual:documentation"]
+  },
+  "tasks": {
+    "codegen": {
+      "inputs": ["$TURBO_DEFAULT$", "!src/routeTree.gen.ts"]
+    },
+    "build": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/docs/dokumentace/**",
+        "!src/routeTree.gen.ts",
+        ".env",
+        ".env.local",
+        ".env.production",
+        ".env.production.local"
+      ],
+      "env": ["VITE_*"]
+    },
+    "lint": {
+      "inputs": ["$TURBO_DEFAULT$", "!src/routeTree.gen.ts"]
+    },
+    "typecheck": {
+      "inputs": ["$TURBO_DEFAULT$", "!src/routeTree.gen.ts"]
+    }
+  }
+}

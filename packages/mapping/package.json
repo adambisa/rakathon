@@ -1,0 +1,33 @@
+{
+  "name": "@prostapaper/mapping",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Maps report text and sector marks to a REDCap-shaped surgery record",
+  "type": "module",
+  "imports": {
+    "#*": "./src/*.ts",
+    "#test-fixtures": "./tests/fixtures.ts"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "evaluate:citations": "node scripts/evaluate-citations.ts",
+    "lint": "eslint . --max-warnings 0",
+    "map": "node scripts/cli.ts",
+    "reconsensus": "node scripts/reconsensus.ts",
+    "test": "node --test tests/*.test.ts",
+    "typecheck": "tsc -p .",
+    "variance": "node scripts/variance.ts"
+  },
+  "dependencies": {
+    "@prostapaper/contracts": "workspace:*",
+    "openai": "~7.32.0",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@prostapaper/config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}
